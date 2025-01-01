@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>Game Jam Timer</title>
+<style>
+body { font-family: sans-serif; text-align: center; }
+#timer { font-size: 2em; margin-top: 50px; }
+#error { color: red; }
+</style>
+</head>
+<body>
+<h1>Game Jam Timer</h1>
+<div id="timer"></div>
+<div id="error"></div>
+
+<script>
+  const startTimeString = "2025-01-1T12:00:00Z"; // *Замените на НАЧАЛО вашего джема в формате UTC*
+  const endTimeString = "2025-02-2T23:00:00Z";   // *Замените на КОНЕЦ вашего джема в формате UTC*
+
+  const startTime = new Date(startTimeString);
+  const endTime = new Date(endTimeString);
+
+  // Проверка на корректность дат
+  if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+    document.getElementById("error").textContent = "Invalid date format. Please use ISO 8601 (e.g., 2024-03-20T15:30:00Z)";
+    return;
+  }
+
+  if (startTime >= endTime) {
+      document.getElementById("error").textContent = "Start time must be before end time.";
+      return;
+  }
+
+
+  function updateTimer() {
+    const now = new Date();
+    let remainingTime = endTime - now;
+
+    if (remainingTime <= 0) {
+      document.getElementById("timer").textContent = "Game Jam Finished!";
+      clearInterval(timerInterval);
+      return;
+    }
+
+    const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+    document.getElementById("timer").textContent = `${days}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  const timerInterval = setInterval(updateTimer, 1000);
+</script>
+
+</body>
+</html>
